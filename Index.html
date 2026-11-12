@@ -78,6 +78,10 @@
 .step .instructions[hidden] {display:block;}
 .step.done .step-heading label {text-decoration:line-through!important;}
 @media(max-width:520px){.stage-body{padding:9px}.step .image-disclosure{margin-left:13px}}
+.noaa-url{margin:16px 0;border:1px solid var(--line, #d8dfe8);border-radius:10px;padding:14px;background:rgba(128,128,128,.035)}
+.noaa-url h2{font-size:1.08rem;margin:0 0 10px}.noaa-url ol{padding-left:24px;line-height:1.55}.noaa-url li{margin-bottom:10px}
+.url-figure{margin:12px 0;max-width:310px}.url-figure img{max-width:100%;height:auto;border:1px solid #cbd5e1;border-radius:6px}.url-figure figcaption{font-size:.85rem;margin-top:4px}
+.url-line{margin:8px 0;overflow-wrap:anywhere;word-break:break-word}.url-line code{white-space:normal}
 </style>
 </head>
 <body>
@@ -206,7 +210,19 @@
 <p>Click <strong>Run</strong>. Compare the boundary with the outlet, drainage network, ridgelines, and authoritative watershed reference. Investigate unexpected gaps or deviations.</p>
 </div>
 </article>
-</section><p class="note"><strong>Scope:</strong> This procedure delineates a catchment; it does <strong>not</strong> calculate HAND values, flood depth, or inundation extent. Catchment boundaries derived from unconditioned DEMs may differ from authoritative hydrography, particularly around culverts, bridges, and engineered drainage.</p><footer><button id="reset" type="button">Reset this checklist</button><span aria-live="polite" class="save-status" id="save-status">Progress is saved in this browser when storage is permitted.</span></footer></div></details></div>
+</section><p class="note"><strong>Scope:</strong> The Catchment stage delineates drainage areas using terrain-derived flow paths. It does <strong>not</strong> independently calculate HAND elevations, flood depth, or inundation extent. Unconditioned DEMs may produce drainage differences near culverts, bridges, and engineered channels. NOAA’s separate NWM Analysis and Assimilation inundation service can be added to an existing ArcGIS Online web map as a modeled flood-extent reference; adding it does not correct catchment delineation or DEM conditioning.</p>
+<section class="noaa-url" aria-labelledby="noaa-url-title">
+<h2 id="noaa-url-title">Next — Add NOAA inundation extent by URL</h2>
+<p>With your existing map already open in <strong>ArcGIS Online Map Viewer</strong>:</p>
+<figure class="url-figure"><img src="Images/AGO_Add_Layer_From_URL.png" loading="lazy" alt="ArcGIS Online Map Viewer Add menu, showing Add layer from URL"/><figcaption>Map Viewer: Add (+) → Add layer from URL.</figcaption></figure>
+<ol>
+<li>Click <strong>Add (+)</strong> on the left toolbar and select <strong>Add layer from URL</strong>.</li>
+<li>Paste the NOAA ArcGIS REST MapServer address:<div class="url-line"><code>https://maps.water.noaa.gov/server/rest/services/nwm/ana_inundation_extent/MapServer</code></div></li>
+<li>If prompted for a layer type, select <strong>ArcGIS Server web service</strong>, then click <strong>Add to map</strong>.</li>
+<li>In the Layers pane, use <strong>Inundation Extent (Experimental)</strong> (service sublayer 0) for the modeled flood footprint, and save your existing web map.</li>
+</ol>
+<p class="note"><strong>Interpretation:</strong> This is experimental, modeled inundation, not observed flooding. A blank area does not establish that flooding is absent; inspect NOAA coverage and the current model conditions.</p>
+</section><footer><button id="reset" type="button">Reset this checklist</button><span aria-live="polite" class="save-status" id="save-status">Progress is saved in this browser when storage is permitted.</span></footer></div></details></div>
 </main>
 <script>
 (function () {
