@@ -30,6 +30,18 @@
     .toggle:hover, .toggle:focus-visible { background:#e5edf7; }
     .instructions { padding:0 14px 13px 44px; font-size:.91rem; }
     .instructions[hidden] { display:none; }
+    /* Each step has an independent image disclosure directly above its instructions. */
+    .image-disclosure { margin:4px 0 12px; }
+    .image-disclosure summary { display:flex; align-items:center; gap:8px; width:fit-content; cursor:pointer; color:#145c8b; font-weight:650; padding:5px 0; list-style:none; }
+    .image-disclosure summary::-webkit-details-marker { display:none; }
+    .image-disclosure summary::before { content:'▸'; display:inline-block; width:13px; transition:transform .15s ease; }
+    .image-disclosure[open] summary::before { transform:rotate(90deg); }
+    .image-disclosure .image-frame { margin:8px 0 12px; }
+    .image-disclosure img { display:block; max-width:100%; height:auto; border:1px solid var(--line); border-radius:7px; }
+    .image-disclosure figcaption { color:var(--muted); font-size:.83rem; margin-top:5px; }
+    .image-disclosure .missing-image { display:none; padding:12px; border:1px dashed var(--line); border-radius:6px; color:var(--muted); background:var(--subtle); }
+    .image-disclosure.image-unavailable img, .image-disclosure.image-unavailable figcaption { display:none; }
+    .image-disclosure.image-unavailable .missing-image { display:block; }
     .instructions p { margin:5px 0 9px; }
     .instructions ol, .instructions ul { margin:6px 0 8px; padding-left:21px; }
     .instructions li + li { margin-top:4px; }
@@ -38,20 +50,13 @@
     .params th { width:42%; font-weight:650; background:var(--subtle); }
     .hint { font-size:.85rem; color:var(--muted); }
     .note { background:var(--subtle); border-left:3px solid var(--accent); border-radius:4px; padding:10px 12px; margin:13px 0 0; font-size:.87rem; }
-    .image-panel { border:1px solid var(--line); border-radius:9px; background:var(--subtle); overflow:hidden; }
-    .image-panel-header { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:11px 13px; }
-    .image-panel-title { font-weight:650; }
-    .image-wrap { padding:0 13px 13px; }
-    .image-frame { margin:0; border:1px solid var(--line); border-radius:8px; background:white; overflow:hidden; }
-    .image-frame img { display:block; width:100%; height:auto; }
-    .image-help { margin:8px 0 0; font-size:.84rem; color:var(--muted); }
     footer { display:flex; flex-wrap:wrap; gap:9px; justify-content:space-between; align-items:center; margin-top:16px; }
     footer button { font:inherit; font-size:.86rem; border:1px solid var(--line); border-radius:7px; background:white; color:var(--ink); padding:7px 11px; cursor:pointer; }
     footer button:hover, footer button:focus-visible { background:var(--subtle); }
     .save-status { color:var(--muted); font-size:.78rem; }
     a { color:#145c8b; }
     :focus-visible { outline:3px solid #e3a128; outline-offset:2px; }
-    @media(max-width:520px) { body{padding:5px;} .content{padding:12px;} header{padding:14px;} .step-heading{gap:8px;padding:10px;} .instructions{padding:0 11px 11px 13px;} .image-panel-header{padding:10px;} .image-wrap{padding:0 10px 10px;} .params th,.params td{display:block;width:100%;} .params td{border-bottom:1px solid var(--line);} }
+    @media(max-width:520px) { body{padding:5px;} .content{padding:12px;} header{padding:14px;} .step-heading{gap:8px;padding:10px;} .instructions{padding:0 11px 11px 13px;} .params th,.params td{display:block;width:100%;} .params td{border-bottom:1px solid var(--line);} }
     @media(prefers-reduced-motion:no-preference) { progress::-webkit-progress-value { transition:width .2s ease; } }
     @media print { body{padding:0;} main{border:0;} header{print-color-adjust:exact;-webkit-print-color-adjust:exact;} .instructions[hidden]{display:block;} .toggle,footer{display:none;} }
   </style>
@@ -71,23 +76,30 @@
       <article class="step" data-step="fill">
         <div class="step-heading"><input id="fill" type="checkbox"><label for="fill">1. Fill the DEM</label><button class="toggle" type="button" aria-expanded="false" aria-controls="details-fill">Instructions ▾</button></div>
         <div class="instructions" id="details-fill" hidden>
+          <details class="image-disclosure" id="fill-image">
+            <summary>Supporting image</summary>
+            <figure class="image-frame">
+              <img src="images/A_Catchment_Fill_DEM.png" alt="Supporting illustration for Step 1: Fill the DEM" loading="lazy" onerror="this.closest('.image-disclosure').classList.add('image-unavailable')">
+              <figcaption>Step 1 — Fill the DEM: supporting illustration</figcaption>
+              <div class="missing-image">Image not yet uploaded. Add <code>images/A_Catchment_Fill_DEM.png</code> to this GitHub repository.</div>
+            </figure>
+          </details>
           <p>In ArcGIS Pro select <strong>Analysis → Tools</strong>, search for <strong>Fill</strong> (Spatial Analyst Tools → Hydrology).</p>
           <table class="params"><tr><th>Input surface raster</th><td>Your DEM</td></tr><tr><th>Output surface raster</th><td><code>DEM_Filled</code></td></tr><tr><th>Z limit</th><td>Leave blank initially</td></tr></table>
           <p>Click <strong>Run</strong>. Review whether filling depressions is suitable for your terrain and hydrologic conditioning needs.</p>
         </div>
       </article>
-      <section class="image-panel" aria-label="Optional Fill the DEM example image">
-        <div class="image-panel-header"><span class="image-panel-title">Optional image for Step 1: Fill the DEM</span><button class="toggle image-toggle" type="button" aria-expanded="false" aria-controls="fill-image-panel">Show image ▾</button></div>
-        <div class="image-wrap" id="fill-image-panel" hidden>
-          <figure class="image-frame">
-            <img src="images/A_Catchment_Fill_DEM.png" alt="Example graphic for Step 1, Fill the DEM">
-          </figure>
-          <p class="image-help">To use your own image, upload it to your repository and replace the <code>src</code> value above with the correct file path. Example: <code>images/A_Catchment_Fill_DEM.png</code>.</p>
-        </div>
-      </section>
       <article class="step" data-step="direction">
         <div class="step-heading"><input id="direction" type="checkbox"><label for="direction">2. Calculate flow direction</label><button class="toggle" type="button" aria-expanded="false" aria-controls="details-direction">Instructions ▾</button></div>
         <div class="instructions" id="details-direction" hidden>
+          <details class="image-disclosure" id="direction-image">
+            <summary>Supporting image</summary>
+            <figure class="image-frame">
+              <img src="images/A_Catchment_Flow_Direction.png" alt="Supporting illustration for Step 2: Calculate flow direction" loading="lazy" onerror="this.closest('.image-disclosure').classList.add('image-unavailable')">
+              <figcaption>Step 2 — Calculate flow direction: supporting illustration</figcaption>
+              <div class="missing-image">Image not yet uploaded. Add <code>images/A_Catchment_Flow_Direction.png</code> to this GitHub repository.</div>
+            </figure>
+          </details>
           <p>Select <strong>Analysis → Tools</strong> and search for <strong>Flow Direction</strong> (Spatial Analyst Tools → Hydrology).</p>
           <table class="params"><tr><th>Input surface raster</th><td><code>DEM_Filled</code></td></tr><tr><th>Output flow direction raster</th><td><code>Flow_Direction</code></td></tr><tr><th>Flow direction type</th><td><strong>D8</strong></td></tr></table>
           <p>Click <strong>Run</strong>. Keep this D8 raster for the Watershed operation.</p>
@@ -96,6 +108,14 @@
       <article class="step" data-step="accumulation">
         <div class="step-heading"><input id="accumulation" type="checkbox"><label for="accumulation">3. Calculate flow accumulation</label><button class="toggle" type="button" aria-expanded="false" aria-controls="details-accumulation">Instructions ▾</button></div>
         <div class="instructions" id="details-accumulation" hidden>
+          <details class="image-disclosure" id="accumulation-image">
+            <summary>Supporting image</summary>
+            <figure class="image-frame">
+              <img src="images/A_Catchment_Flow_Accumulation.png" alt="Supporting illustration for Step 3: Calculate flow accumulation" loading="lazy" onerror="this.closest('.image-disclosure').classList.add('image-unavailable')">
+              <figcaption>Step 3 — Calculate flow accumulation: supporting illustration</figcaption>
+              <div class="missing-image">Image not yet uploaded. Add <code>images/A_Catchment_Flow_Accumulation.png</code> to this GitHub repository.</div>
+            </figure>
+          </details>
           <p>Select <strong>Analysis → Tools</strong> and search for <strong>Flow Accumulation</strong> (Spatial Analyst Tools → Hydrology).</p>
           <table class="params"><tr><th>Input flow direction raster</th><td><code>Flow_Direction</code></td></tr><tr><th>Output accumulation raster</th><td><code>Flow_Accumulation</code></td></tr><tr><th>Input weight raster</th><td>Leave blank</td></tr></table>
           <p>Click <strong>Run</strong>. High-accumulation cells help identify drainage pathways.</p>
@@ -104,6 +124,14 @@
       <article class="step" data-step="outlet">
         <div class="step-heading"><input id="outlet" type="checkbox"><label for="outlet">4. Create the catchment outlet point</label><button class="toggle" type="button" aria-expanded="false" aria-controls="details-outlet">Instructions ▾</button></div>
         <div class="instructions" id="details-outlet" hidden>
+          <details class="image-disclosure" id="outlet-image">
+            <summary>Supporting image</summary>
+            <figure class="image-frame">
+              <img src="images/A_Catchment_Catchment_Outlet.png" alt="Supporting illustration for Step 4: Create the catchment outlet point" loading="lazy" onerror="this.closest('.image-disclosure').classList.add('image-unavailable')">
+              <figcaption>Step 4 — Create the catchment outlet point: supporting illustration</figcaption>
+              <div class="missing-image">Image not yet uploaded. Add <code>images/A_Catchment_Catchment_Outlet.png</code> to this GitHub repository.</div>
+            </figure>
+          </details>
           <ol><li>In the <strong>Catalog</strong> pane, right-click your geodatabase → <strong>New → Feature Class</strong>.</li><li>Name it <code>Catchment_Outlet</code>, choose <strong>Point</strong>, and use a coordinate system compatible with your analysis.</li><li>Add the empty feature class to your map.</li><li>Select <strong>Edit → Create</strong>, place a point at the desired downstream drainage outlet, and <strong>Save Edits</strong>.</li></ol>
           <p class="hint">The outlet controls which upstream area the Watershed tool will delineate.</p>
         </div>
@@ -111,6 +139,14 @@
       <article class="step" data-step="snap">
         <div class="step-heading"><input id="snap" type="checkbox"><label for="snap">5. Snap the outlet to accumulated flow</label><button class="toggle" type="button" aria-expanded="false" aria-controls="details-snap">Instructions ▾</button></div>
         <div class="instructions" id="details-snap" hidden>
+          <details class="image-disclosure" id="snap-image">
+            <summary>Supporting image</summary>
+            <figure class="image-frame">
+              <img src="images/A_Catchment_Snap_Pour_Point.png" alt="Supporting illustration for Step 5: Snap the outlet to accumulated flow" loading="lazy" onerror="this.closest('.image-disclosure').classList.add('image-unavailable')">
+              <figcaption>Step 5 — Snap the outlet to accumulated flow: supporting illustration</figcaption>
+              <div class="missing-image">Image not yet uploaded. Add <code>images/A_Catchment_Snap_Pour_Point.png</code> to this GitHub repository.</div>
+            </figure>
+          </details>
           <p>Select <strong>Analysis → Tools</strong> and search for <strong>Snap Pour Point</strong> (Spatial Analyst Tools → Hydrology).</p>
           <table class="params"><tr><th>Input raster or feature pour point data</th><td><code>Catchment_Outlet</code></td></tr><tr><th>Input accumulation raster</th><td><code>Flow_Accumulation</code></td></tr><tr><th>Snap distance</th><td>Start with 2–3 DEM cell widths, expressed in the input map's linear units; adjust after inspection</td></tr><tr><th>Pour point field</th><td>Unique integer identifier, such as <code>OBJECTID</code></td></tr><tr><th>Output raster</th><td><code>Snapped_Outlet</code></td></tr></table>
           <p>Click <strong>Run</strong>. Check the resulting location carefully: a snap to the wrong branch will delineate the wrong catchment.</p>
@@ -119,6 +155,14 @@
       <article class="step" data-step="watershed">
         <div class="step-heading"><input id="watershed" type="checkbox"><label for="watershed">6. Delineate the catchment</label><button class="toggle" type="button" aria-expanded="false" aria-controls="details-watershed">Instructions ▾</button></div>
         <div class="instructions" id="details-watershed" hidden>
+          <details class="image-disclosure" id="watershed-image">
+            <summary>Supporting image</summary>
+            <figure class="image-frame">
+              <img src="images/A_Catchment_Delineate_Catchment.png" alt="Supporting illustration for Step 6: Delineate the catchment" loading="lazy" onerror="this.closest('.image-disclosure').classList.add('image-unavailable')">
+              <figcaption>Step 6 — Delineate the catchment: supporting illustration</figcaption>
+              <div class="missing-image">Image not yet uploaded. Add <code>images/A_Catchment_Delineate_Catchment.png</code> to this GitHub repository.</div>
+            </figure>
+          </details>
           <p>Select <strong>Analysis → Tools</strong> and search for <strong>Watershed</strong> (Spatial Analyst Tools → Hydrology).</p>
           <table class="params"><tr><th>Input D8 flow direction raster</th><td><code>Flow_Direction</code></td></tr><tr><th>Input raster or feature pour point data</th><td><code>Snapped_Outlet</code></td></tr><tr><th>Pour point field</th><td><code>Value</code></td></tr><tr><th>Output raster</th><td><code>Catchment_Raster</code></td></tr></table>
           <p>Click <strong>Run</strong>. This output identifies the upstream cells draining to your outlet.</p>
@@ -127,6 +171,14 @@
       <article class="step" data-step="polygon">
         <div class="step-heading"><input id="polygon" type="checkbox"><label for="polygon">7. Convert catchment to polygon and inspect</label><button class="toggle" type="button" aria-expanded="false" aria-controls="details-polygon">Instructions ▾</button></div>
         <div class="instructions" id="details-polygon" hidden>
+          <details class="image-disclosure" id="polygon-image">
+            <summary>Supporting image</summary>
+            <figure class="image-frame">
+              <img src="images/A_Catchment_Raster_To_Polygon.png" alt="Supporting illustration for Step 7: Convert catchment to polygon and inspect" loading="lazy" onerror="this.closest('.image-disclosure').classList.add('image-unavailable')">
+              <figcaption>Step 7 — Convert catchment to polygon and inspect: supporting illustration</figcaption>
+              <div class="missing-image">Image not yet uploaded. Add <code>images/A_Catchment_Raster_To_Polygon.png</code> to this GitHub repository.</div>
+            </figure>
+          </details>
           <p>Select <strong>Analysis → Tools</strong> and search for <strong>Raster to Polygon</strong> (Conversion Tools → From Raster).</p>
           <table class="params"><tr><th>Input raster</th><td><code>Catchment_Raster</code></td></tr><tr><th>Field</th><td><code>Value</code></td></tr><tr><th>Simplify polygons</th><td>Unchecked for cell-edge fidelity</td></tr><tr><th>Output polygon features</th><td><code>Catchment_Boundary</code></td></tr></table>
           <p>Click <strong>Run</strong>. Compare the boundary with the outlet, drainage network, ridgelines, and authoritative watershed reference. Investigate unexpected gaps or deviations.</p>
@@ -171,16 +223,6 @@
       button.textContent = open ? 'Hide ▴' : 'Instructions ▾';
     });
   });
-  const imageToggle = document.querySelector('.image-toggle');
-  const imagePanel = document.getElementById('fill-image-panel');
-  if (imageToggle && imagePanel) {
-    imageToggle.addEventListener('click', function () {
-      const open = imagePanel.hidden;
-      imagePanel.hidden = !open;
-      imageToggle.setAttribute('aria-expanded', String(open));
-      imageToggle.textContent = open ? 'Hide image ▴' : 'Show image ▾';
-    });
-  }
   function update() {
     const done = checkboxes.filter(checkbox => checkbox.checked).length;
     progress.value = done;
