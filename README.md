@@ -1,1 +1,1 @@
-# NOAA-HAND-Workflow
+Upload A-Catchment.html and the images/ directory to the repository root. This preserves the 7 original Catchment steps, progress keys and parameter text. The stage begins collapsed; each step image begins collapsed. 01 is the stage illustration; 03/04/05 are aligned with the corresponding operations. Other supplied imagery is included for later sections but NOT assigned to unrelated Catchment operations. The four unmatched Catchment steps have clearly labeled placeholders. Existing GitHub Pages URL: /A-Catchment.html.
