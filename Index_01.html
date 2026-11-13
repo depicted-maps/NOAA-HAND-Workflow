@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>01 — Aggregate DEM | Pawcatuck HAND</title>
+<style>
+  :root{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:#203047;background:#fff}
+  *{box-sizing:border-box}
+  body{margin:0;padding:12px;font-size:14px;line-height:1.45}
+  main{max-width:700px;margin:auto}
+  h1{margin:0 0 4px;font-size:1.19rem;color:#293557}
+  .sub{margin:0 0 15px;color:#526176;font-size:.85rem}
+  p{margin:0 0 12px}
+  h2{font-size:1rem;margin:16px 0 6px}
+  table{border-collapse:collapse;width:100%;font-size:.86rem;margin-bottom:12px}
+  th,td{text-align:left;vertical-align:top;border-bottom:1px solid #d7dee8;padding:7px 8px}
+  th{width:37%;background:#f5f7fa;font-weight:650}
+  code{overflow-wrap:anywhere;font-size:.91em}
+  .checks{border:1px solid #d7dee8;border-radius:8px;padding:10px 12px}
+  label{display:flex;gap:9px;align-items:flex-start;padding:6px 0;cursor:pointer}
+  input{width:18px;height:18px;margin:1px 0 0;accent-color:#176d7a;flex:none}
+  .status{color:#526176;font-size:.8rem;margin-top:9px}
+  button{background:#f5f7fa;border:1px solid #d7dee8;border-radius:5px;padding:5px 9px;font:inherit;cursor:pointer;margin-top:8px}
+  :focus-visible{outline:3px solid #e3a128;outline-offset:2px}
+  @media(max-width:440px){body{padding:10px}th{width:38%}th,td{padding:6px 5px}}
+</style>
+</head>
+<body>
+<main>
+<h1>01 — Aggregate DEM</h1>
+<p class="sub">Pawcatuck Watershed · HAND flood-inundation workflow</p>
+<p><strong>Purpose:</strong> Aggregate the 1-foot elevation raster into a 10-foot DEM for subsequent hydrologic processing. This prepares the terrain; it does not delineate the catchment.</p>
+<h2>ArcGIS Pro — Aggregate</h2>
+<p>Open <strong>Analysis → Tools</strong> and search for <strong>Aggregate</strong> (Spatial Analyst Tools → Generalization). Enter the parameters shown below, then select <strong>Run</strong>.</p>
+<table aria-label="Aggregate parameters"><tbody>
+<tr><th scope="row">Input raster</th><td><code>USGS_Pawtucket_HUC08_DEM_1ft_01100007</code></td></tr>
+<tr><th scope="row">Output raster</th><td><code>Pawcatuck_HAND_DEM_10ft</code></td></tr>
+<tr><th scope="row">Cell factor</th><td>10</td></tr>
+<tr><th scope="row">Aggregation technique</th><td>Mean</td></tr>
+<tr><th scope="row">Expand extent if needed</th><td>Unchecked</td></tr>
+<tr><th scope="row">Ignore NoData in calculations</th><td>Checked</td></tr>
+</tbody></table>
+<h2>Verify the result</h2>
+<div class="checks" role="group" aria-label="Aggregate verification checklist">
+<label><input type="checkbox" data-check="run">Aggregate finished without errors.</label>
+<label><input type="checkbox" data-check="output">The output raster exists with the specified name.</label>
+<label><input type="checkbox" data-check="resolution">Cell size is 10 feet in both directions.</label>
+<label><input type="checkbox" data-check="coverage">Coverage, alignment, and NoData areas have been inspected.</label>
+<div class="status" id="status" aria-live="polite">0 of 4 verified</div>
+<button type="button" id="reset">Clear checks</button>
+</div>
+<p class="status">Checklist selections are saved locally in this browser when permitted.</p>
+</main>
+<script>
+(() => {
+  'use strict';
+  const key = 'pawcatuck-hand:index-01-aggregate:v1';
+  const checks = [...document.querySelectorAll('[data-check]')];
+  const status = document.getElementById('status');
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch (_) { saved = {}; }
+  checks.forEach(box => {
+    box.checked = saved[box.dataset.check] === true;
+    box.addEventListener('change', update);
+  });
+  function update() {
+    status.textContent = `${checks.filter(box => box.checked).length} of ${checks.length} verified`;
+    const values = {};
+    checks.forEach(box => { values[box.dataset.check] = box.checked; });
+    try { localStorage.setItem(key, JSON.stringify(values)); } catch (_) {}
+  }
+  document.getElementById('reset').addEventListener('click', () => {
+    checks.forEach(box => { box.checked = false; });
+    update();
+  });
+  update();
+})();
+</script>
+</body>
+</html>
